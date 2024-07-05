@@ -17,7 +17,7 @@ session_start();
     <ol>
         <li><a href="?menu=insertD">Tambah Data di depan</a></li>
         <li><a href="?menu=insertB">Tambah Data di belakang</a></li>
-        <li><a href="?menu=deleteD">Hapus Data di</a></li>
+        <li><a href="?menu=deleteD">Hapus Data di depan</a></li>
         <li><a href="?menu=cetak">Cetak Data</a></li>
     </ol>
 </body>
