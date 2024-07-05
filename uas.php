@@ -1,6 +1,4 @@
-<!--- Dendi Ardiansyah
-      230302006
-      TI 1 A           -->
+
 
       <?php
 session_start();
@@ -11,10 +9,10 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLLCHT</title>
+    <title>DLLCNH</title>
 </head>
 <body>
-    <h1>Single Linked List Circular Head Tail</h1>
+    <h1>Double Linked List Circular Head Tail</h1>
     <h2>Menu</h2>
     <ol>
         <li><a href="?menu=insertD">Tambah Data di depan</a></li>
@@ -26,85 +24,140 @@ session_start();
 </html>
 
 <?php
+class Node {
+    public $data;
+    public $next;
+    public $prev;
 
-    class Node {
-        public $data;
-        public $next;
+    //mengidentifikasi terlebih dahulu setiap datanya
+    public function __construct($d){
+        $this->data = $d;
+        $this->next = null;
+        $this->prev = null;
+    }
+}
 
-        public function __construct($d) {
-            $this -> data = $d;
-            $this -> next = null;
+class DLLNCH {
+   public $head;
+
+   //mengidentifikasi terlebih dahulu datanya
+   public function __construct(){
+    $this->head = null;
+    }
+
+    //untuk mengecek apakah data kosong atu tidak
+    public function LEmpty(){
+        if ($this->head == null){
+            return 1;
+        }else{
+            return 0;
         }
     }
 
-    class SLLCH {
-        public function __construct() {
-            $this -> head = null;
-            $this -> tail = null;
-        }
+    //untuk menambhakan data dari depan
+    public function insertD($d){
+        $newNode = new Node($d);
 
-        public function LEmpty() {
-            if ($this -> head === null) {
-                return true; 
-            } else { 
-                return false;   
-            }
+        if($this->LEmpty()){
+            $this->head = $newNode;
+        }else{
+            $newNode->next = $this->head;
+            $this->head->prev = $newNode;
+            $this->head = $newNode;
         }
-
-        public function insertD($d) {
-            $newNode = new Node ($d);
-            if ($this -> LEmpty()) {
-                $newNode -> next = $newNode;
-                $this -> head = $newNode;
-                $this -> tail = $newNode;
-            } else {
-                $newNode -> next = $this -> head;
-                $this -> tail -> next = $newNode;
-                $this -> head = $newNode;  
-            }
-        }
-
-        public function insertB($d) {
-            $newNode = new Node ($d);
-            if ($this -> LEmpty()) {
-                $newNode -> next = $newNode;
-                $this -> head = $newNode;
-                $this -> tail = $newNode;
-            } else {
-                $newNode -> next = $this -> head;
-                $this -> tail -> next = $newNode;
-                $this -> tail = $newNode;
-            }               
-        }
-
-        public function deleteD() {
-            if  (!$this -> LEmpty()) {
-                if ($this -> head -> next === $this -> head) {
-                    $this -> head = null;
-                    $this -> tail = null;
-                } else {
-                    $this -> tail -> next = $this -> head -> next;
-                    $this -> head = $this -> head -> next;
-                }
-            }
-        }
-
-        public function printList() {
-            if ($this -> LEmpty()){
-                echo "List kosong";
-            } else {
-                $temp = $this -> head;
-                do {
-                    echo $temp -> data . " ";
-                    $temp = $temp -> next;
-                } while ($temp != $this -> head);
-            }
-        }
-    
     }
+
+    //untuk menambahkan data dari belakang
+    public function insertB($d){
+        $newNode = new Node($d);
+
+        if($this->LEmpty()){
+            $this->head = $newNode;
+        }else{
+            $temp = $this->head;
+            while($temp->next != null){
+                $temp = $temp->next;
+            }
+            $temp->next = $newNode;
+            $newNode->prev = $temp;
+            $newNode->next = null;
+        }
+    }
+
+    //untuk menghapus data dari depan
+    public function deleteD(){
+        if(!$this->LEmpty()){
+            if($this->head->next == null ){
+                $this->head = null;
+            }else{
+                $hapus = $this->head;
+                $this->head = $this->head->next;
+                $this->head->prev = null;
+                $hapus->next = null;
+                unset($hapus);
+            }
+        }else{
+            echo "<br>List kosong";
+        }
+    }
+
+    //untuk menghapus data dari belakang 
+    public function hapusB(){
+        if($this->head == null){
+            echo "Linked list kososng\n";
+            return;
+        }else if($this->head->next == null){
+            $this->head = null;
+            return;
+        }else{
+            $temp = $this->head;
+            while ($temp->next->next != null){
+                $temp = $temp->next;
+            }
+            $hapus = $temp->next;
+            $temp->next = null;
+            $hapus->prev = null;
+            unset($hapus);
+        }
+    }
+
+    //untuk mencetak setiap datanya
+    public function printList(){
+        if($this->head == null){
+            echo "Linked list kosong\n";
+            return;
+        }
+        $current = $this->head;
+        while($current != null){
+            echo $current->data."";
+            $current = $current->next;
+        }
+        echo "\n";
+    }
+
+    //untuk menghapus semua data
+    public function clear(){
+        if ($this->LEmpty()){
+            echo "Link list kososng\n";
+            return;
+        }
+        $temp = $this->head;
+        $hapus = null;
+
+        do{
+            $hapus = $temp;
+            $temp = $temp->next;
+            unset ($hapus);
+        }while ($temp != null);
+        $this->head = null;
+        echo "Link List berhasil dihapus\n";
+    }
+}
+
+
 
     if(!isset($_SESSION['list'])){
-        $_SESSION['list']=new SLLCH();
+        $_SESSION['list']=new DLLNCH();
     }
 
     function hapusD(){
@@ -121,11 +174,11 @@ session_start();
             <form method="post">
                 <label>Masukkan data :</label>
                 <input type="text" name="data" required><br>
-                <input type="submit" name="submit" value="Simpan Data">
+                <input type="submit" name="submit-depan" value="Simpan Data">
             </form>
     
             <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (isset($_POST['submit-depan'])) {
                 $data=$_POST['data'];
                 $_SESSION['list']->insertD($data);
                 echo "<p>Data berhasil ditambahkan didepan.</p>";
@@ -138,11 +191,11 @@ session_start();
             <form method="post">
                 <label>Masukkan data :</label>
                 <input type="text" name="data" required><br>
-                <input type="submit" name="submit" value="Simpan Data">
+                <input type="submit" name="submit-belakang" value="Simpan Data">
             </form>
 
             <?php
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (isset($_POST['submit-belakang'])) {
                 $data=$_POST['data'];
                 $_SESSION['list']->insertB($data);
                 echo "<p>Data berhasil ditambahkan di belakang.</p>";
@@ -170,7 +223,3 @@ session_start();
         }
 }
 ?>
-
-<!--- Dendi Ardiansyah
-      230302006
-      TI 1 A           -->
